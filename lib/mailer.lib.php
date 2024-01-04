@@ -31,6 +31,12 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
             $mail->Host = G5_SMTP; // SMTP server
             if(defined('G5_SMTP_PORT') && G5_SMTP_PORT)
                 $mail->Port = G5_SMTP_PORT;
+                // 추가
+                $mail->SMTPAuth = true;
+                $mail->AuthType = "LOGIN";  // 이건 있어도 없어도 상관없는 듯 합니다.
+                $mail->SMTPSecure = G5_SMTP_SECURE;
+                $mail->Username = G5_SMTP_USER;
+                $mail->Password = G5_SMTP_PW;
         }
         $mail->CharSet = 'UTF-8';
         $mail->From = $fmail;

@@ -184,6 +184,7 @@ define('G5_SMTP_USER', 'iissdn55@gmail.com');
 define('G5_SMTP_PW',        'zsfhfdolkxyvsgeo');
 
 
+
 /********************
     기타 상수
 ********************/
