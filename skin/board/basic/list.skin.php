@@ -93,10 +93,15 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </thead>
         <tbody>
         <?php
-        for ($i=0; $i<count($list); $i++) {
+        
+        $totalPosts = count($list);
+        for ($i = $totalPosts - 1; $i >= 0; $i--) {
         	if ($i%2==0) $lt_class = "even";
         	else $lt_class = "";
+            // delete한 시간 값이 들어있는 wr_2가 존재할 때 화면에 보이지 않게 처리
+            if(!empty($list[$i]['wr_2'])) continue;
 		?>
+        
         <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?> <?php echo $lt_class ?>">
             <?php if ($is_checkbox) { ?>
             <td class="td_chk chk_box">
@@ -107,15 +112,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
             	</label>
             </td>
             <?php } ?>
-            <td class="td_num2">
-            <?php
-            if ($list[$i]['is_notice']) // 공지사항
-                echo '<strong class="notice_icon">공지</strong>';
-            else if ($wr_id == $list[$i]['wr_id'])
-                echo "<span class=\"bo_current\">열람중</span>";
-            else
-                echo $list[$i]['num'];
-             ?>
+            <td class="td_num2"><?php echo $i+1 ?>
             </td>
 
             <td class="td_subject" style="padding-left:<?php echo $list[$i]['reply'] ? (strlen($list[$i]['wr_reply'])*10) : '0'; ?>px">

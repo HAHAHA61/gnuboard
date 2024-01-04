@@ -112,7 +112,7 @@ while ($row = sql_fetch_array($result))
 }
 
 // 게시글과 댓글 삭제
-sql_query(" delete from $write_table where wr_parent = '{$write['wr_id']}' ");
+sql_query(" update $write_table set wr_2 = '".date('Y-m-d H:i:s')."' where wr_id = '{$write['wr_id']}' ");
 
 // 최근게시물 삭제
 sql_query(" delete from {$g5['board_new_table']} where bo_table = '$bo_table' and wr_parent = '{$write['wr_id']}' ");
