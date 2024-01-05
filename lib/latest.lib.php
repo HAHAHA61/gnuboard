@@ -59,6 +59,11 @@ function latest($skin_dir='', $bo_table, $rows=10, $subject_len=40, $cache_time=
         
         $result = sql_query($sql);
         for ($i=0; $row = sql_fetch_array($result); $i++) {
+            // wr_2 필드가 비어있을 때만 출력하도록 체크
+            if(empty($row['wr_2'])) {
+                continue; // 다음 게시글로 건너뜁니다.
+            }
+
             try {
                 unset($row['wr_password']);     //패스워드 저장 안함( 아예 삭제 )
             } catch (Exception $e) {

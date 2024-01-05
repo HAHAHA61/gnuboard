@@ -326,8 +326,9 @@ function comment_delete()
     return confirm("이 댓글을 삭제하시겠습니까?");
 }
 
+if($is_admin){
 comment_box('', 'c'); // 댓글 입력폼이 보이도록 처리하기위해서 추가 (root님)
-
+}
 <?php if($board['bo_use_sns'] && ($config['cf_facebook_appid'] || $config['cf_twitter_key'])) { ?>
 
 $(function() {
