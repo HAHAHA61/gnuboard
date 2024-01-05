@@ -41,9 +41,11 @@ $list_count = (is_array($list) && $list) ? count($list) : 0;
             </div>
         </li>
     <?php }  ?>
-    <?php if ($list_count == 0) { //게시물이 없을 때  ?>
-    <li class="empty_li">게시물이 없습니다.</li>
-    <?php }  ?>
+        <a href="<?php echo get_pretty_url($bo_table); ?>"> <li class="empty_li">유지보수문의를 하시려면 클릭해주세요</li></a>
+    
+    
+   
+    
     </ul>
     <a href="<?php echo get_pretty_url($bo_table); ?>" class="lt_more"><span class="sound_only"><?php echo $bo_subject ?></span>더보기</a>
 

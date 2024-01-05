@@ -11,7 +11,7 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
     global $g5;
 
     // 메일발송 사용을 하지 않는다면
-    if (!$config['cf_email_use']) return;
+    // if (!$config['cf_email_use']) return;
 
     if ($type != 1)
         $content = nl2br($content);
@@ -29,15 +29,17 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
         if (defined('G5_SMTP') && G5_SMTP) {
             $mail->IsSMTP(); // telling the class to use SMTP
             $mail->Host = G5_SMTP; // SMTP server
-            if(defined('G5_SMTP_PORT') && G5_SMTP_PORT)
-                $mail->Port = G5_SMTP_PORT;
-                // 추가
-                $mail->SMTPAuth = true;
-                $mail->AuthType = "LOGIN";  // 이건 있어도 없어도 상관없는 듯 합니다.
-                $mail->SMTPSecure = G5_SMTP_SECURE;
-                $mail->Username = G5_SMTP_USER;
-                $mail->Password = G5_SMTP_PW;
+            $mail->Port = 465;
+            $mail->SMTPAuth = true;
+            $mail->AuthType = "LOGIN";  // 이건 있어도 없어도 상관없는 듯 합니다.
+            $mail->SMTPSecure = "ssl";
+            $mail->Host = "smtp.naver.com";
+            $mail->Port = 465;
+            $mail->Username = "iissdn11@naver.com";
+            $mail->Password = "6113qwer!@";
+                           
         }
+       
         $mail->CharSet = 'UTF-8';
         $mail->From = $fmail;
         $mail->FromName = $fname;
@@ -60,7 +62,10 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
 
         $mail_send_result = $mail->send();
 
+        print_r($mail_send_result);
+
     } catch (Exception $e) {
+        echo 'ddddddddddd';
     }
 
     run_event('mail_send_result', $mail_send_result, $mail, $to, $cc, $bcc);
