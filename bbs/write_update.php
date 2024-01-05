@@ -751,6 +751,7 @@ if (!($w == 'u' || $w == 'cu') && $config['cf_email_use'] && $board['bo_use_emai
     }
 }
 
+
 // 사용자 코드 실행
 @include_once($board_skin_path.'/write_update.skin.php');
 @include_once($board_skin_path.'/write_update.tail.skin.php');
@@ -765,3 +766,4 @@ if ($file_upload_msg)
     alert($file_upload_msg, $redirect_url);
 else
     goto_url($redirect_url);
+

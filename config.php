@@ -177,12 +177,15 @@ define('G5_MOBILE_AGENT',   'phone|samsung|lgtel|mobile|[^A]skt|nokia|blackberry
 
 // SMTP
 // lib/mailer.lib.php 에서 사용
+define('G5_SMTP_USE_EXT',  1);
+
+if(defined('G5_SMTP_USE_EXT') && G5_SMTP_USE_EXT == 0){
 define('G5_SMTP',        'smtp.gmail.com');
 define('G5_SMTP_PORT',              '587');
 define('G5_SMTP_SECURE',            'TLS');
-define('G5_SMTP_USER', 'iissdn55@gmail.com');
-define('G5_SMTP_PW',        'zsfhfdolkxyvsgeo');
-
+define('G5_SMTP_USER', 'iissdn11@gmail.com');
+define('G5_SMTP_PW',        'fausnncfajfgldje');
+}
 
 
 /********************

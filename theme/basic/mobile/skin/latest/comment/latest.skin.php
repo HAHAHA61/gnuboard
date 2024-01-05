@@ -25,7 +25,7 @@ $list_count = (is_array($list) && $list) ? count($list) : 0;
     }
 
     if($list_count ==0)
-        echo '<li class="empty_li">게시물이 없습니다.</li>'.PHP_EOL;
+        echo '<li class="">게시물이 없습니다.</li>'.PHP_EOL;
     ?>
     </ul>
     <a href="<?php echo get_pretty_url($bo_table); ?>" class="lt_more"><span class="sound_only"><?php echo $bo_subject ?></span>더보기</a>

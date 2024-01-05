@@ -16,6 +16,8 @@ if (!$bo_table) {
     alert($msg);
 }
 
+
+
 $g5['board_title'] = ((G5_IS_MOBILE && $board['bo_mobile_subject']) ? $board['bo_mobile_subject'] : $board['bo_subject']);
 
 // wr_id 값이 있으면 글읽기

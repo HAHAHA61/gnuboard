@@ -182,6 +182,10 @@ if ($is_search_bbs) {
     $sql = " select distinct wr_parent from {$write_table} where {$sql_search} {$sql_order} limit {$from_record}, $page_rows ";
 } else {
     $sql = " select * from {$write_table} where wr_is_comment = 0 ";
+    // if(isset($_GET['mb_id'])){
+    //     $sql = " select * from {$write_table} where wr_is_comment = 0 AND wr_id = '{$_GET['mb_id']}' ";
+    // }
+
     if(!empty($notice_array))
         $sql .= " and wr_id not in (".implode(', ', $notice_array).") ";
     $sql .= " {$sql_order} limit {$from_record}, $page_rows ";

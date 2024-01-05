@@ -46,11 +46,65 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </div>
 
         <ul class="btn_bo_user">
+
+        
+
+        <!-- <?php if ($member) { ?>
+        <li>
+        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member ?>" class="btn_b01">전체글<br>보기</a>
+        </li><?php } ?>
+
+        <?php if ($member['mb_id']) { ?><li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member['mb_id'] ?>" class="btn_b01">내글<br>보기</a></li><?php } ?> -->
+
+
+
+
+        <?php if ($member['mb_id']) { ?>
+    <li>
+        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member['mb_id'] ?>" onclick="toggleView('myPosts')" class="btn_b01">내글<br>보기</a>
+    </li>
+    <!-- <li>
+        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member ?>" onclick="toggleView('allPosts')" class="btn_b01">전체글<br>보기</a>
+    </li> -->
+<?php } ?>
+
+<script>
+    function toggleView(viewType) {
+        var postView = document.getElementById('postView');
+
+        if (viewType === 'myPosts') {
+            postView.style.display = 'block';
+        } else if (viewType === 'allPosts') {
+            postView.style.display = 'none';
+        }
+    }
+</script>
+
+
+
+
+<script>
+    function toggleView(viewType) {
+        var postView = document.getElementById('postView');
+
+        if (viewType === 'myPosts') {
+            postView.style.display = 'block';
+        } else if (viewType === 'allPosts') {
+            postView.style.display = 'none';
+        }
+    }
+</script>
+
+
+
+
+        
         	<?php if ($admin_href) { ?><li><a href="<?php echo $admin_href ?>" class="btn_admin btn" title="관리자"><i class="fa fa-cog fa-spin fa-fw"></i><span class="sound_only">관리자</span></a></li><?php } ?>
             <?php if ($rss_href) { ?><li><a href="<?php echo $rss_href ?>" class="btn_b01 btn" title="RSS"><i class="fa fa-rss" aria-hidden="true"></i><span class="sound_only">RSS</span></a></li><?php } ?>
             <li>
             	<button type="button" class="btn_bo_sch btn_b01 btn" title="게시판 검색"><i class="fa fa-search" aria-hidden="true"></i><span class="sound_only">게시판 검색</span></button>
             </li>
+            
             <?php if ($write_href) { ?><li><a href="<?php echo $write_href ?>" class="btn_b01 btn" title="글쓰기"><i class="fa fa-pencil" aria-hidden="true"></i><span class="sound_only">글쓰기</span></a></li><?php } ?>
         	<?php if ($is_admin == 'super' || $is_auth) {  ?>
         	<li>
@@ -61,6 +115,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 		            <li><button type="submit" name="btn_submit" value="선택복사" onclick="document.pressed=this.value"><i class="fa fa-files-o" aria-hidden="true"></i> 선택복사</button></li>
 		            <li><button type="submit" name="btn_submit" value="선택이동" onclick="document.pressed=this.value"><i class="fa fa-arrows" aria-hidden="true"></i> 선택이동</button></li>
 		        </ul>
+             
 		        <?php } ?>
         	</li>
         	<?php }  ?>
@@ -94,8 +149,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <tbody>
         <?php
         
-        $totalPosts = count($list);
-        for ($i = $totalPosts - 1; $i >= 0; $i--) {
+        // $totalPosts = count($list);
+        // for ($i = $totalPosts - 1; $i >= 0; $i--) {
+        for ($i=0; $i<count($list); $i++) {
+               
+
         	if ($i%2==0) $lt_class = "even";
         	else $lt_class = "";
             // delete한 시간 값이 들어있는 wr_2가 존재할 때 화면에 보이지 않게 처리
