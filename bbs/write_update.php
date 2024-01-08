@@ -727,7 +727,6 @@ if (!($w == 'u' || $w == 'cu') && $config['cf_email_use'] && $board['bo_use_emai
     if ($config['cf_email_wr_group_admin']) $array_email[] = $group_admin['mb_email'];
     // 최고관리자에게 보내는 메일
     if ($config['cf_email_wr_super_admin']) $array_email[] = $super_admin['mb_email'];
-    if ($config['cf_email_wr_super_admin']) $array_email[] = 'iissdn55@gmail.com';
 
     // 원글게시자에게 보내는 메일
     if ($config['cf_email_wr_write']) {

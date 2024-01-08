@@ -134,7 +134,16 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 id="wr_3"
                 class="frm_input full_input required"
                 size="50"
-                placeholder="홈페이지주소를 입력해주세요">
+                placeholder="회사명을 입력해주세요">
+    </div>
+    <div class="bo_w_link write_div">
+            <input
+                type="text"
+                name="wr_4"
+                value="<?php echo $wr_4 ?>" 
+                id="wr_email"
+                size="50"
+                placeholder="홈페이지 주소를 입력해주세요">
     </div>
     <div class="bo_w_link write_div">
             <input
@@ -142,9 +151,21 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 name="wr_email"
                 value="<?php echo $email ?>" 
                 id="wr_email"
+                class="frm_input full_input required"
                 size="50"
-                placeholder="이메일주소를 입력해주세요">
+                placeholder="담당자 이메일을 입력해주세요">
     </div>
+    <div class="bo_w_link write_div">
+            <input
+                type="text"
+                name="wr_5"
+                value="<?php echo $wr_3 ?>" 
+                id="wr_5"
+                class="frm_input full_input required"
+                size="50"
+                placeholder="담당자 전화번호를 입력해주세요">
+    </div>
+    
        
    
 

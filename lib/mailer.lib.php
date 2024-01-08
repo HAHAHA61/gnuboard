@@ -33,9 +33,9 @@ function mailer($fname, $fmail, $to, $subject, $content, $type=0, $file="", $cc=
             $mail->SMTPAuth = true;
             $mail->AuthType = "LOGIN";  // 이건 있어도 없어도 상관없는 듯 합니다.
             $mail->SMTPSecure = "ssl";
-            $mail->Host = "smtp.naver.com";
+            $mail->Host = "smtp.gmail.com";
             $mail->Port = 465;
-            $mail->Username = "iissdn11@naver.com";
+            $mail->Username = "iissdn100gmail.com";
             $mail->Password = "6113qwer!@";
                            
         }
