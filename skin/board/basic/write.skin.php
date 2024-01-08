@@ -141,10 +141,12 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 type="text"
                 name="wr_4"
                 value="<?php echo $wr_4 ?>" 
-                id="wr_email"
+                id="wr_4"
+                class="frm_input full_input required"
                 size="50"
                 placeholder="홈페이지 주소를 입력해주세요">
     </div>
+  
     <div class="bo_w_link write_div">
             <input
                 type="text"
