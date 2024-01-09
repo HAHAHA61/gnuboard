@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "700000";
+$sub_menu = "700100";
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');
@@ -120,6 +120,7 @@ $colspan = 4;
                 <?php
                 for ($i = 0; $row = sql_fetch_array($result); $i++) {
                     $word = get_text($row['wr_subject']);
+                    $wr_id = $row['wr_id'];
                     $bg = 'bg' . ($i % 2);
                 ?>
                     <tr class="<?php echo $bg; ?>">
@@ -129,7 +130,8 @@ $colspan = 4;
                         </td>
                         <td><?php echo $row['wr_3'] ?></td>
                         <td class="td_left">
-                            <a href="/adm/maintenance_view.php">
+                            <a href="/adm/maintenance_view.php?wr_id=<?php echo $wr_id; ?>">
+
             
                             <?php echo $word ?></a>
                         </td>

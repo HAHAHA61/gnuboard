@@ -1,13 +1,15 @@
 <?php
 echo "내용입니댜";
 
-$sub_menu = "700000";
+$sub_menu = "700100";
 require_once './_common.php';
 auth_check_menu($auth, $sub_menu, 'r');
 
 
 $g5['title'] = '유지보수문의관리';
 require_once './admin.head.php';
+
+$wr_id = $_GET['wr_id'];
 
 
 $sql = "SELECT *
@@ -16,37 +18,57 @@ $sql = "SELECT *
  $row = sql_fetch($sql);
 ?>
 
-<article id="bo_v" >
-    <header>
-        <h5 id="bo_v_title">
-            
-            <span class="bo_v_tit">
-            <?php
-            echo $row['wr_subject']; // 글제목 출력
-            ?></span>
-        </h5>
-    </header>
+<article id="bo_v">
+    
 
     
-    <section id="bo_v_atc">
-        <h2 id="bo_v_atc_title">본문</h2>
-        <div id="bo_v_share">
-    
-	    </div>
+            <!-- 여기에 필요한 내용 추가 -->
+        </div>
+        <div class="tbl_head01 tbl_wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>제목</th>
+                        <th><?php echo $row['wr_subject']; ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>본문</td>
+                        <td><?php echo $row['wr_content']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>업체명</td>
+                        <td><?php echo $row['wr_3']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>홈페이지 주소</td>
+                        <td><?php echo $row['wr_4']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>담당자 이메일</td>
+                        <td><?php echo $row['wr_email']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>담당자 전화번호</td>
+                        <td><?php echo $row['wr_5']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>답변유무</td>
+                        <td><?php 
+                                if ($row['wr_comment'] == 1){
+                                    echo "Y";
+                                }else{
+                                    echo "N";
+                                }
+                            ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</article>
 
-       
-        <!-- 본문 내용 시작 { -->
-        <div id="bo_v_con"><?php echo $row['wr_content']; ?></div>
-        <div id="bo_v_con"><?php echo $row['wr_3']; ?></div>
-        <div id="bo_v_con"><?php echo $row['wr_4']; ?></div>
-        <div id="bo_v_con"><?php echo $row['wr_email']; ?></div>
-        <div id="bo_v_con"><?php echo $row['wr_5']; ?></div>
-       
-        <!-- } 본문 내용 끝 -->
-
-
-
-    </section>
 
     <!-- <?php
     $cnt = 0;
