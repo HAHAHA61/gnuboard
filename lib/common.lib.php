@@ -4246,3 +4246,16 @@ function option_array_checked($option, $arr=array()){
 
     return $checked;
 }
+
+//이미지 불러오기
+function image_view($mb_id, $wr_id, $bf_no, $width, $height)
+{
+    $sql = " select * from rainboard_file where mb_id= '$mb_id' and wr_id = '$wr_id' and bf_no = '$bf_no'";
+    $result = sql_query($sql);
+    $row=sql_fetch_array($result);   
+   
+    $str .= "<img style = 'width:".$width."px;height:".$height."px;' src = '../data/file/$row[bf_file]'>";
+   
+    return $str;
+}
+

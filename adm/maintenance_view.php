@@ -94,14 +94,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <tr>
                         <td>이미지</td>
                         <td>
-                        <?php if (isset($file['bf_source']) && $file['bf_source']) : ?>
-                            <a href="<?php echo G5_DATA_URL.'/file/'.$file['bf_file']; ?>" download>
-                                이미지 다운로드
-                            </a>
-                        <?php else : ?>
-                            이미지가 없습니다.
-                        <?php endif; ?>
-                    </td>
+                        <?php 
+                            if (!empty($file['bf_file'])) {
+                                $image_path = './data/file/qa/'.$file['bf_file'];
+                                echo "<img src='{$image_path}' alt='Image'>";
+                            } else {
+                                echo "첨부 파일이 없습니다.";
+                            }
+                        ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>업체명</td>

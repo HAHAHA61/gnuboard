@@ -1,5 +1,5 @@
 <?php
-$sub_menu = "700100";
+$sub_menu = "700200";
 require_once './_common.php';
 
 auth_check_menu($auth, $sub_menu, 'r');
@@ -29,23 +29,15 @@ if ($stx) {
     $sql_search .= " ) ";
 }
 
-
 $sql_order = " ORDER BY wr_comment = 0 DESC, wr_datetime ASC";
-
-$sql = "SELECT *
-        FROM rainwrite_qa
-        WHERE wr_3 LIKE '레인아이'";
-
-$row = sql_fetch($sql);
-
-
 
 $sql = "SELECT COUNT(*) AS cnt
         FROM rainwrite_qa
         WHERE wr_is_comment <> 1 
-        AND wr_2 LIKE ''";
-$delete = sql_fetch($sql);
-$total_count = $delete['cnt'];
+        AND wr_2 LIKE '%20%'";
+
+$row = sql_fetch($sql);
+$total_count = $row['cnt'];
 
 $rows = $config['cf_page_rows'];
 $total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
@@ -62,16 +54,11 @@ $sql = "SELECT *
 
 $result = sql_query($sql);
 
-$sql = " select *
-            {$sql_common}
-            {$sql_search}
-            {$sql_order}
-            limit {$from_record}, {$rows} ";
-$result = sql_query($sql);
+
 
 $listall = '<a href="' . $_SERVER['SCRIPT_NAME'] . '" class="ov_listall">전체목록</a>';
 
-$g5['title'] = '유지보수문의관리';
+$g5['title'] = '유지보수문의 삭제글관리';
 require_once './admin.head.php';
 
 $colspan = 4;
@@ -122,37 +109,45 @@ $colspan = 4;
                     <th scope="col">문의제목</th>
                     <th scope="col">등록일</th>
                     <th scope="col">답변유무</th>
+                    <th scope="col">삭제글유무</th>
                 </tr>
-                <tbody>
+            </thead>
+            <tbody>
                 <?php
-                while ($delete = sql_fetch_array($result)) {
-                    if (!$delete['wr_2'] and $delete['wr_is_comment']!=1) {
-                        $word = get_text($delete['wr_subject']);
-                        $wr_id = $delete['wr_id'];
+                while ($row = sql_fetch_array($result)) {
+                    if ($row['wr_2']) {
+                        $word = get_text($row['wr_subject']);
+                        $wr_id = $row['wr_id'];
                         $bg = 'bg' . ($i % 2);
                 ?>
                         <tr class="<?php echo $bg; ?>">
                             <td class="td_chk">
                                 <label for="chk_<?php echo $i; ?>" class="sound_only"><?php echo $word ?></label>
-                                <input type="checkbox" name="chk[]" value="<?php echo $delete['wr_id'] ?>" id="chk_<?php echo $i ?>">
+                                <input type="checkbox" name="chk[]" value="<?php echo $row['wr_id'] ?>" id="chk_<?php echo $i ?>">
                             </td>
 
-                            <td><?php echo $delete['wr_id'] ?></td>
-                            <td><?php echo $delete['wr_3'] ?></td>
+                            <td><?php echo $row['wr_id'] ?></td>
+                            <td><?php echo $row['wr_3'] ?></td>
                             <td class="td_left">
                                 <a href="/adm/maintenance_view.php?wr_id=<?php echo $wr_id; ?>">
                                     <?php echo $word ?></a>
                             </td>
 
-                            <td><?php echo $delete['wr_datetime'] ?></td>
+                            <td><?php echo $row['wr_datetime'] ?></td>
                             <td><?php
-                                if ($delete['wr_comment'] == 1) {
+                                if ($row['wr_comment'] == 1) {
                                     echo "Y";
                                 } else {
                                     echo "N";
                                 }
                                 ?></td>
-                           
+                            <td><?php
+                                if ($row['wr_2']) {
+                                    echo "삭제된 글입니다.";
+                                } else {
+                                    echo "";
+                                }
+                                ?></td>
                         </tr>
                 <?php
                     }
@@ -163,6 +158,7 @@ $colspan = 4;
                 }
                 ?>
             </tbody>
+
         </table>
 
     </div>

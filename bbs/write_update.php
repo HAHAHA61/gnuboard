@@ -283,7 +283,6 @@ if ($w == '' || $w == 'r') {
                      wr_last = '".G5_TIME_YMDHIS."',
                      wr_ip = '{$_SERVER['REMOTE_ADDR']}',
                      wr_1 = '$wr_1',
-                     wr_2 = '$wr_2',
                      wr_3 = '$wr_3',
                      wr_4 = '$wr_4',
                      wr_5 = '$wr_5',

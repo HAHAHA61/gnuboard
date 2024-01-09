@@ -47,25 +47,11 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
         <ul class="btn_bo_user">
 
-        
-
-        <!-- <?php if ($member) { ?>
-        <li>
-        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member ?>" class="btn_b01">전체글<br>보기</a>
-        </li><?php } ?>
-
-        <?php if ($member['mb_id']) { ?><li><a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member['mb_id'] ?>" class="btn_b01">내글<br>보기</a></li><?php } ?> -->
-
-
-
-
         <?php if ($member['mb_id']) { ?>
     <li>
         <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member['mb_id'] ?>" onclick="toggleView('myPosts')" class="btn_b01">내글<br>보기</a>
     </li>
-    <!-- <li>
-        <a href="<?php echo G5_BBS_URL ?>/board.php?bo_table=<?php echo $bo_table ?>&sfl=mb_id%2C1&stx=<?php echo $member ?>" onclick="toggleView('allPosts')" class="btn_b01">전체글<br>보기</a>
-    </li> -->
+    
 <?php } ?>
 
 <script>
@@ -79,23 +65,6 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         }
     }
 </script>
-
-
-
-
-<script>
-    function toggleView(viewType) {
-        var postView = document.getElementById('postView');
-
-        if (viewType === 'myPosts') {
-            postView.style.display = 'block';
-        } else if (viewType === 'allPosts') {
-            postView.style.display = 'none';
-        }
-    }
-</script>
-
-
 
 
         
