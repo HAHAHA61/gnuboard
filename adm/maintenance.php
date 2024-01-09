@@ -110,10 +110,12 @@ $colspan = 4;
                         <label for="chkall" class="sound_only">현재 페이지 인기검색어 전체</label>
                         <input type="checkbox" name="chkall" value="1" id="chkall" onclick="check_all(this.form)">
                     </th>
+                    <th scope="col">글번호</a></th>
                     <th scope="col">업체명</a></th>
                     <th scope="col">문의제목</th>
                     <th scope="col">등록일</th>
                     <th scope="col">답변유무</th>
+                    <th scope="col">삭제글유무</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,6 +130,8 @@ $colspan = 4;
                             <label for="chk_<?php echo $i; ?>" class="sound_only"><?php echo $word ?></label>
                             <input type="checkbox" name="chk[]" value="<?php echo $row['wr_id'] ?>" id="chk_<?php echo $i ?>">
                         </td>
+
+                        <td><?php echo $row['wr_id'] ?></td>
                         <td><?php echo $row['wr_3'] ?></td>
                         <td class="td_left">
                             <a href="/adm/maintenance_view.php?wr_id=<?php echo $wr_id; ?>">
@@ -142,6 +146,13 @@ $colspan = 4;
                                 echo "Y";
                             }else{
                                 echo "N";
+                            }
+                         ?></td>
+                         <td><?php 
+                            if ($row['wr_2']){
+                                echo "삭제된 글입니다.";
+                            }else{
+                                echo "";
                             }
                          ?></td>
                     </tr>

@@ -855,3 +855,16 @@ header('Cache-Control: pre-check=0, post-check=0, max-age=0'); // HTTP/1.1
 header('Pragma: no-cache'); // HTTP/1.0
 
 run_event('common_header');
+
+// 파일 불러오기
+function image_view($wr_id, $width, $height)
+{
+    $sql = " select * from rainboard_file where wr_id = '$wr_id' ";
+    $result = sql_query($sql);
+    $row=sql_fetch_array($result);   
+   
+    // $str .= "<img style = 'width:".$width."px;height:".$height."px;' src = '../data/member/$row[bf_file]'>";
+   $str .= "안녕하세요";
+
+    return $str;
+}

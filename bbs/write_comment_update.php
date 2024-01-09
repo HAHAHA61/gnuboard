@@ -179,7 +179,7 @@ if ($w == 'c') // 댓글 입력
                      wr_email = '$wr_email',
                      wr_homepage = '$wr_homepage',
                      wr_datetime = '".G5_TIME_YMDHIS."',
-                     wr_last = '',
+                     wr_last = '".G5_TIME_YMDHIS."',
                      wr_ip = '{$_SERVER['REMOTE_ADDR']}',
                      wr_1 = '$wr_1',
                      wr_2 = '$wr_2',
