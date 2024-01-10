@@ -12,6 +12,7 @@ $menu['menu100'] = array(
     array('100910', '캡챠파일 일괄삭제', G5_ADMIN_URL . '/captcha_file_delete.php',   'cf_captcha', 1),
     array('100920', '썸네일파일 일괄삭제', G5_ADMIN_URL . '/thumbnail_file_delete.php',   'cf_thumbnail', 1),
     array('100500', 'phpinfo()',        G5_ADMIN_URL . '/phpinfo.php',       'cf_phpinfo')
+    
 );
 
 if (version_compare(phpversion(), '5.3.0', '>=') && defined('G5_BROWSCAP_USE') && G5_BROWSCAP_USE) {
@@ -21,3 +22,5 @@ if (version_compare(phpversion(), '5.3.0', '>=') && defined('G5_BROWSCAP_USE') &
 
 $menu['menu100'][] = array('100410', 'DB업그레이드', G5_ADMIN_URL . '/dbupgrade.php', 'db_upgrade');
 $menu['menu100'][] = array('100400', '부가서비스', G5_ADMIN_URL . '/service.php', 'cf_service');
+$menu['menu100'][] = array('100800', '텔레그램 플러그인 설정', G5_ADMIN_URL.'/telegram_setting.php', 'cf_service');
+

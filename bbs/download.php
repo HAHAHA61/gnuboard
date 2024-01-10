@@ -1,5 +1,6 @@
 <?php
 include_once('./_common.php');
+include_once("$g5_path/common.php");
 
 // clean the output buffer
 ob_end_clean();
@@ -10,8 +11,8 @@ $no = isset($_REQUEST['no']) ? (int) $_REQUEST['no'] : 0;
 
 // 쿠키에 저장된 ID값과 넘어온 ID값을 비교하여 같지 않을 경우 오류 발생
 // 다른곳에서 링크 거는것을 방지하기 위한 코드
-if (!get_session('ss_view_'.$bo_table.'_'.$wr_id))
-    alert('잘못된 접근입니다.');
+// if (!get_session('ss_view_'.$bo_table.'_'.$wr_id))
+//     alert('잘못된 접근입니다.');
 
 // 다운로드 차감일 때 비회원은 다운로드 불가
 if($board['bo_download_point'] < 0 && $is_guest)
@@ -24,11 +25,11 @@ if (!$file['bf_file'])
 
 $nonce = isset($_REQUEST['nonce']) ? preg_replace('/[^0-9a-z\|]/i', '', $_REQUEST['nonce']) : '';
 
-if (function_exists('download_file_nonce_is_valid') && !defined('G5_DOWNLOAD_NONCE_CHECK')){
-    if(! download_file_nonce_is_valid($nonce, $bo_table, $wr_id)){
-        alert('토큰 유효시간이 지났거나 토큰이 유효하지 않습니다.\\n브라우저를 새로고침 후 다시 시도해 주세요.', G5_URL);
-    }
-}
+// if (function_exists('download_file_nonce_is_valid') && !defined('G5_DOWNLOAD_NONCE_CHECK')){
+//     if(! download_file_nonce_is_valid($nonce, $bo_table, $wr_id)){
+//         alert('토큰 유효시간이 지났거나 토큰이 유효하지 않습니다.\\n브라우저를 새로고침 후 다시 시도해 주세요.', G5_URL);
+//     }
+// }
 
 // JavaScript 불가일 때
 $js = (isset($_GET['js'])) ? $_GET['js'] : '';

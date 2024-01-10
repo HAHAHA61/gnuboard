@@ -42,7 +42,8 @@ var char_max = parseInt(<?php echo $comment_max ?>); // 최대
 	            <span>(<?php echo $list[$i]['ip']; ?>)</span>
 	            <?php } ?>
 	            <span class="sound_only">작성일</span>
-	            <span class="bo_vc_hdinfo"><i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="<?php echo date('Y-m-d\TH:i:s+09:00', strtotime($list[$i]['datetime'])) ?>"><?php echo $list[$i]['datetime'] ?></time></span>
+	            <span class="bo_vc_hdinfo"><i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="<?php echo date('Y-m-d\TH:i:s+09:00', strtotime($list[$i]['datetime'])) ?>"><?php echo "입력시간 : ". $list[$i]['datetime'] ?></time></span>
+                <span class="bo_vc_hdinfo"><i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="<?php echo date('Y-m-d\TH:i:s+09:00', strtotime($list[$i]['last'])) ?>"><?php echo "수정시간 : ".$list[$i]['last'] ?></time></span>
 	            <?php
 	            include(G5_SNS_PATH.'/view_comment_list.sns.skin.php');
 	            ?>

@@ -29,16 +29,7 @@ if ($stx) {
     $sql_search .= " ) ";
 }
 
-
 $sql_order = " ORDER BY wr_comment = 0 DESC, wr_datetime ASC";
-
-$sql = "SELECT *
-        FROM rainwrite_qa
-        WHERE wr_3 LIKE '레인아이'";
-
-$row = sql_fetch($sql);
-
-
 
 $sql = "SELECT COUNT(*) AS cnt
         FROM rainwrite_qa
@@ -54,20 +45,26 @@ if ($page < 1) {
 } // 페이지가 없으면 첫 페이지 (1 페이지)
 $from_record = ($page - 1) * $rows; // 시작 열을 구함
 
-$sql = "SELECT *
-        FROM rainwrite_qa
-        WHERE wr_is_comment <> 1
-        ORDER BY wr_comment = 0 DESC, wr_datetime ASC";
-
-
-$result = sql_query($sql);
-
-$sql = " select *
+if($stx){
+    $sql = " select *
             {$sql_common}
             {$sql_search}
             {$sql_order}
             limit {$from_record}, {$rows} ";
+    $result = sql_query($sql);
+
+}else{
+    $sql = "SELECT *
+    FROM rainwrite_qa
+    WHERE wr_is_comment <> 1
+    ORDER BY wr_comment = 0 DESC, 
+             CASE WHEN wr_comment = 0 THEN wr_datetime END ASC,
+             CASE WHEN wr_comment > 0 THEN wr_datetime END DESC";
+
+
 $result = sql_query($sql);
+}
+
 
 $listall = '<a href="' . $_SERVER['SCRIPT_NAME'] . '" class="ov_listall">전체목록</a>';
 
@@ -120,12 +117,14 @@ $colspan = 4;
                     <th scope="col">글번호</a></th>
                     <th scope="col">업체명</a></th>
                     <th scope="col">문의제목</th>
+                    <th scope="col">작성자</th>
                     <th scope="col">등록일</th>
                     <th scope="col">답변유무</th>
                 </tr>
                 <tbody>
                 <?php
                 while ($delete = sql_fetch_array($result)) {
+                    
                     if (!$delete['wr_2'] and $delete['wr_is_comment']!=1) {
                         $word = get_text($delete['wr_subject']);
                         $wr_id = $delete['wr_id'];
@@ -144,9 +143,10 @@ $colspan = 4;
                                     <?php echo $word ?></a>
                             </td>
 
+                            <td><?php echo $delete['wr_name'] ?></td>
                             <td><?php echo $delete['wr_datetime'] ?></td>
                             <td><?php
-                                if ($delete['wr_comment'] == 1) {
+                                if ($delete['wr_comment'] >= 1) {
                                     echo "Y";
                                 } else {
                                     echo "N";
@@ -163,6 +163,7 @@ $colspan = 4;
                 }
                 ?>
             </tbody>
+            
         </table>
 
     </div>

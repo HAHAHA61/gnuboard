@@ -3,6 +3,7 @@ if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 // add_stylesheet('css 구문', 출력순서); 숫자가 작을 수록 먼저 출력됨
 add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0);
+include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 ?>
 
 <section id="bo_w">
@@ -168,16 +169,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
                 placeholder="담당자 전화번호를 입력해주세요">
     </div>
     
-       
-   
-
-    <!-- <?php for ($i=1; $is_link && $i<=G5_LINK_COUNT; $i++) { ?>
-    <div class="bo_w_link write_div">
-        <label for="wr_link<?php echo $i ?>"><i class="fa fa-link" aria-hidden="true"></i><span class="sound_only"> 링크  #<?php echo $i ?></span></label>
-        <input type="text" name="wr_link<?php echo $i ?>" value="<?php if($w=="u"){ echo $write['wr_link'.$i]; } ?>" id="wr_link<?php echo $i ?>" class="frm_input full_input" size="50">
-    </div>
-    <?php } ?> -->
-
+     
     <?php for ($i=0; $is_file && $i<$file_count; $i++) { ?>
     <div class="bo_w_flie write_div">
         <div class="file_wr write_div">
@@ -189,6 +181,18 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <?php } ?>
 
         <?php if($w == 'u' && $file[$i]['file']) { ?>
+                <?php
+                    $file = get_file($bo_table, $wr_id);
+                    $image = urlencode($file[$i]['file']);
+                    $image_path = G5_DATA_PATH.'/file/'.$bo_table;
+                    $image_url = G5_DATA_URL.'/file/'.$bo_table;
+                    echo $file[$i]['file'];
+                    if (preg_match("/\.(gif|jpg|jpeg|png)$/i", $image)) {
+                        $thumb = thumbnail($image, $image_path , $image_path , 50, 50, false, true);
+                        $image_content = $image_url.'/'.$thumb;
+                        echo "<img src=".$image_content.">";
+                    }
+                ?>   
         <span class="file_del">
             <input type="checkbox" id="bf_file_del<?php echo $i ?>" name="bf_file_del[<?php echo $i;  ?>]" value="1"> <label for="bf_file_del<?php echo $i ?>"><?php echo $file[$i]['source'].'('.$file[$i]['size'].')';  ?> 파일 삭제</label>
         </span>

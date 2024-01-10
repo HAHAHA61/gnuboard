@@ -59,6 +59,7 @@ for ($i=0; $row=sql_fetch_array($result); $i++)
     }
 
     $list[$i]['datetime'] = substr($row['wr_datetime'],2,14);
+    $list[$i]['last'] = substr($row['wr_last'],2,14);
 
     // 관리자가 아니라면 중간 IP 주소를 감춘후 보여줍니다.
     $list[$i]['ip'] = $row['wr_ip'];

@@ -2,6 +2,7 @@
 
 $sub_menu = "700100";
 require_once './_common.php';
+include_once(G5_LIB_PATH.'/thumbnail.lib.php');
 auth_check_menu($auth, $sub_menu, 'r');
 
 
@@ -24,19 +25,68 @@ $sql = "SELECT *
 
 $comment = sql_fetch($sql);
 
+$sql = "SELECT * FROM rainwrite_qa WHERE wr_parent = '{$wr_id}' AND wr_is_comment = 1 ORDER BY wr_datetime ASC";
+$comments = sql_query($sql);
 
-$sql = " SELECT * 
-         FROM rainboard_file 
-         where wr_id = '{$wr_id}' ";
-$file = sql_fetch($sql);
+
+$sql = " select * from rainboard where 1";
+$board = sql_fetch($sql);
+
+
+
+$view = get_view($row, $board, $board_skin_path);
+
 
 $comment_action_url = "http://raineye.com/adm/maintenance_view.php?wr_id=".$wr_id;
 
-// 댓글 폼이 제출되었을 때의 처리
+// 댓글 수정 폼이 제출되었을 때의 처리
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (isset($_POST['w']) && $_POST['w'] == 'cu'){
+    $comment_id = (int)$_POST['wr_id'];
+
+    // 댓글 ID로 해당 댓글 정보 가져오기
+    $sql = "SELECT * FROM rainwrite_qa WHERE wr_parent = '{$wr_id}' AND wr_is_comment = 1";
+    $comment_info = sql_fetch($sql);
+    $comment_id = $comment_info['wr_id'];
+
+
+    if (!$comment_info) {
+        echo "해당 댓글을 찾을 수 없습니다.";
+        exit;
+    }
+
+    // 필요한 POST 데이터 확인
+    $wr_content = isset($_POST['wr_content']) ? $_POST['wr_content'] : '';
+    $mb_id = $member['mb_id'];
+
+    // wr_content가 비어있는지 확인
+    if (empty($wr_content)) {
+        echo "댓글 내용을 입력해주세요.";
+    } else {
+        // 댓글 수정을 위한 UPDATE 쿼리
+        $sql = "UPDATE rainwrite_qa 
+                SET 
+                    wr_content = '{$wr_content}',
+                    mb_id = '$mb_id',
+                    wr_last = '".G5_TIME_YMDHIS."' 
+                WHERE 
+                    wr_id = '{$comment_id}'";
+
+        sql_query($sql);
+
+        // 댓글 수정 후 다시 읽기 페이지로 리다이렉션 (선택)
+        $redirect_url = "http://raineye.com/adm/maintenance_view.php?wr_id=".$wr_id;
+        goto_url($redirect_url);
+        exit;
+    }
+}else{
     // 필요한 POST 데이터 확인 (wr_id는 이미 사용 중)
     $wr_content = isset($_POST['wr_content']) ? $_POST['wr_content'] : '';
     $mb_id = $member['mb_id'];
+    $wr_name = $member['mb_nick'];
+    $wr_email = $member['mb_email'];
 
     // wr_content가 비어있는지 확인
     if (empty($wr_content)) {
@@ -50,6 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     wr_comment = 1, 
                     wr_content = '{$wr_content}',
                     mb_id = '$mb_id',
+                    wr_name = '$wr_name',
+                    wr_email = '$wr_email',
                     wr_datetime = '".G5_TIME_YMDHIS."',
                     wr_last = '".G5_TIME_YMDHIS."' ";
         sql_query($sql);
@@ -68,16 +120,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 }
-
-
+}
 ?>
 
 <article id="bo_v">
-    
-
-    
             <!-- 여기에 필요한 내용 추가 -->
+            <div class="btn_confirm">
+                <button type="submit" id="btn_submit" class="btn_submit" style="float: left; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 20px; text-align: center;" onclick="window.location.href='http://raineye.com/adm/maintenance.php';">목록으로</button>
+            </div>
+
+
+
         <div class="tbl_head01 tbl_wrap">
+            
             <table>
                 <thead>
                     <tr>
@@ -92,16 +147,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <td><?php echo $row['wr_content']; ?></td>
                     </tr>
                     <tr>
-                        <td>이미지</td>
-                        <td>
-                        <?php 
-                            if (!empty($file['bf_file'])) {
-                                $image_path = './data/file/qa/'.$file['bf_file'];
-                                echo "<img src='{$image_path}' alt='Image'>";
-                            } else {
-                                echo "첨부 파일이 없습니다.";
+                    <td>이미지</td>
+                    <td>
+                    <?php
+                        // 파일 출력
+                        
+                       
+                        
+                        $v_img_count = count($view['file']);
+                        if($v_img_count) {
+                            echo "<div id=\"bo_v_img\">\n";
+                
+                            foreach($view['file'] as $view_file) {
+                                echo get_file_thumbnail($view_file);
                             }
-                        ?>
+                            echo "</div>\n";
+                        }
+                       
+                        ?>      
+                    </td>
+                    </tr>
+                    <td>첨부파일</td>              
+                    
+                        <td>
+                                <?php
+                            $cnt = 0;
+                            if ($view['file']['count']) {
+                                for ($i=0; $i<count($view['file']); $i++) {
+                                    if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view'])
+                                        $cnt++;
+                                }
+                            }
+                            ?>
+                            <?php if($cnt) { ?>
+                            <section id="bo_v_file">
+                                <h2>첨부파일</h2>
+                                <ul>
+                                <?php
+                                // 가변 파일
+                                for ($i=0; $i<count($view['file']); $i++) {
+                                    if (isset($view['file'][$i]['source']) && $view['file'][$i]['source'] && !$view['file'][$i]['view']) {
+                                ?>
+                                    <li>
+                                        <i class="fa fa-folder-open" aria-hidden="true"></i>
+                                        <a href="<?php echo $view['file'][$i]['href'];  ?>" class="view_file_download">
+                                            <strong><?php echo $view['file'][$i]['source'] ?></strong> <?php echo $view['file'][$i]['content'] ?> (<?php echo $view['file'][$i]['size'] ?>)
+                                        </a>
+                                        <br>
+                                        <span class="bo_v_file_cnt"><?php echo $view['file'][$i]['download'] ?>회 다운로드 | DATE : <?php echo $view['file'][$i]['datetime'] ?></span>
+                                    </li>
+                                <?php
+                                    }
+                                }
+                                ?>
+                                </ul>
+                            </section>
+                            <!-- } 첨부파일 끝 -->
+                            <?php } ?>
                         </td>
                     </tr>
                     <tr>
@@ -122,17 +224,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </tr>
                     <tr>
                         <td>답변유무</td>
-                        <td><?php echo ($row['wr_comment'] == 1) ? "Y" : "N"; ?>
+                        <td><?php echo ($row['wr_comment'] >= 1) ? "Y" : "N"; ?>
                         </td>
                     </tr>
+
+        
                     <!-- 댓글 출력 -->
                     <tr>
                         <td>답변</td>
                         <td>
                             <?php 
-                            if ($row['wr_comment'] == 1) {
+                            if ($row['wr_comment'] >= 1){
                                 echo $comment['wr_content'];
-                            }else{
                                 
                             }
                             ?>
@@ -149,6 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!-- 댓글 쓰기 시작 { -->
     <aside id="bo_vc_w" class="bo_vc_w">
     <form name="fviewcomment" id="fviewcomment" action="<?php echo $comment_action_url; ?>" onsubmit="return fviewcomment_submit(this);" method="post" autocomplete="off">
+    
     <input type="hidden" name="w" value="<?php echo $w ?>" id="w">
     <input type="hidden" name="bo_table" value="<?php echo $bo_table ?>">
     <input type="hidden" name="wr_id" value="<?php echo $wr_id ?>">
@@ -195,7 +299,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     <div class="bo_vc_w_wr">
         <div class="btn_confirm">
-            <button type="submit" id="btn_submit" class="btn_submit">댓글등록</button>
+            <?php
+            if ($row['wr_comment'] >= 1) {
+                // 댓글이 존재하면 "댓글수정" 버튼 표시
+                echo '<button type="submit" id="btn_submit" class="btn_submit" style="float:right;" onclick="document.getElementById(\'w\').value=\'cu\';">수정완료</button>';
+
+            } else {
+                // 댓글이 없으면 "댓글등록" 버튼 표시
+                echo '<button type="submit" id="btn_submit" class="btn_submit" style="float:right;">댓글등록</button>';
+            }
+            ?>
         </div>
     </div>
     </form>
@@ -243,8 +356,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     return true;
     }
+
+    function comment_box(comment_id, work)
+{
+    var el_id,
+        form_el = 'fviewcomment',
+        respond = document.getElementById(form_el);
+
+    // 댓글 아이디가 넘어오면 답변, 수정
+    if (comment_id)
+    {
+        if (work == 'c')
+            el_id = 'reply_' + comment_id;
+        else
+            el_id = 'edit_' + comment_id;
+    }
+    else
+        el_id = 'bo_vc_w';
+
+    if (save_before != el_id)
+    {
+        if (save_before)
+        {
+            document.getElementById(save_before).style.display = 'none';
+        }
+
+        document.getElementById(el_id).style.display = '';
+        document.getElementById(el_id).appendChild(respond);
+        //입력값 초기화
+        document.getElementById('wr_content').value = '';
+        
+        // 댓글 수정
+        if (work == 'cu')
+        {
+            document.getElementById('wr_content').value = document.getElementById('save_comment_' + comment_id).value;
+            if (typeof char_count != 'undefined')
+                check_byte('wr_content', 'char_count');
+            if (document.getElementById('secret_comment_'+comment_id).value)
+                document.getElementById('wr_secret').checked = true;
+            else
+                document.getElementById('wr_secret').checked = false;
+        }
+
+        document.getElementById('comment_id').value = comment_id;
+        document.getElementById('w').value = work;
+
+        if(save_before)
+            $("#captcha_reload").trigger("click");
+
+        save_before = el_id;
+    }
+}
+
+function comment_delete()
+{
+    return confirm("이 댓글을 삭제하시겠습니까?");
+}
+
+if($is_admin){
+comment_box('', 'c'); // 댓글 입력폼이 보이도록 처리하기위해서 추가 (root님)
+}
+
     </script>
-    <script>
+
+
+
+
+<script>
 jQuery(function($) {            
     //댓글열기
     $(".cmt_btn").click(function(e){

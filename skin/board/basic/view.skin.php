@@ -100,6 +100,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
 
             echo "</div>\n";
         }
+        
          ?>
 
         <!-- 본문 내용 시작 { -->
@@ -110,34 +111,6 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         <?php if ($is_signature) { ?><p><?php echo $signature ?></p><?php } ?>
 
 
-        <!--  추천 비추천 시작 { -->
-        <?php if ( $good_href || $nogood_href) { ?>
-        <div id="bo_v_act">
-            <?php if ($good_href) { ?>
-            <span class="bo_v_act_gng">
-                <a href="<?php echo $good_href.'&amp;'.$qstr ?>" id="good_button" class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></a>
-                <b id="bo_v_act_good"></b>
-            </span>
-            <?php } ?>
-            <?php if ($nogood_href) { ?>
-            <span class="bo_v_act_gng">
-                <a href="<?php echo $nogood_href.'&amp;'.$qstr ?>" id="nogood_button" class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></a>
-                <b id="bo_v_act_nogood"></b>
-            </span>
-            <?php } ?>
-        </div>
-        <?php } else {
-            if($board['bo_use_good'] || $board['bo_use_nogood']) {
-        ?>
-        <div id="bo_v_act">
-            <?php if($board['bo_use_good']) { ?><span class="bo_v_good"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span class="sound_only">추천</span><strong><?php echo number_format($view['wr_good']) ?></strong></span><?php } ?>
-            <?php if($board['bo_use_nogood']) { ?><span class="bo_v_nogood"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span class="sound_only">비추천</span><strong><?php echo number_format($view['wr_nogood']) ?></strong></span><?php } ?>
-        </div>
-        <?php
-            }
-        }
-        ?>
-        <!-- }  추천 비추천 끝 -->
     </section>
 
     <?php
@@ -177,35 +150,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
     <!-- } 첨부파일 끝 -->
     <?php } ?>
 
-    <?php if(isset($view['link']) && array_filter($view['link'])) { ?>
-    <!-- 관련링크 시작 { -->
-    <section id="bo_v_link">
-        <h2>관련링크</h2>
-        <ul>
-        <?php
-        // 링크
-        $cnt = 0;
-        for ($i=1; $i<=count($view['link']); $i++) {
-            if ($view['link'][$i]) {
-                $cnt++;
-                $link = cut_str($view['link'][$i], 70);
-            ?>
-            <li>
-                <i class="fa fa-link" aria-hidden="true"></i>
-                <a href="<?php echo $view['link_href'][$i] ?>" target="_blank">
-                    <strong><?php echo $link ?></strong>
-                </a>
-                <br>
-                <span class="bo_v_link_cnt"><?php echo $view['link_hit'][$i] ?>회 연결</span>
-            </li>
-            <?php
-            }
-        }
-        ?>
-        </ul>
-    </section>
-    <!-- } 관련링크 끝 -->
-    <?php } ?>
+   
     
     <?php if ($prev_href || $next_href) { ?>
     <ul class="bo_v_nb">

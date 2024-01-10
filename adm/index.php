@@ -162,34 +162,35 @@ if (!auth_check_menu($auth, '300100', 'r', true)) {
     $colspan = 5;
     ?>
 
-    <section>
-        <h2>최근게시물</h2>
+<section>
+    <h2>최근게시물</h2>
 
-        <div class="tbl_head01 tbl_wrap">
-            <table>
-                <caption>최근게시물</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">그룹</th>
-                        <th scope="col">게시판</th>
-                        <th scope="col">제목</th>
-                        <th scope="col">이름</th>
-                        <th scope="col">일시</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $sql = " SELECT a.*, b.bo_subject, c.gr_subject, c.gr_id {$sql_common} {$sql_order} limit {$new_write_rows} ";
-                    $result = sql_query($sql);
-                    for ($i = 0; $row = sql_fetch_array($result); $i++) {
-                        $tmp_write_table = $g5['write_prefix'] . $row['bo_table'];
+    <div class="tbl_head01 tbl_wrap">
+        <table>
+            <caption>최근게시물</caption>
+            <thead>
+                <tr>
+                    <th scope="col">그룹</th>
+                    <th scope="col">게시판</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql = " SELECT a.*, b.bo_subject, c.gr_subject, c.gr_id {$sql_common} {$sql_order} limit {$new_write_rows} ";
+                $result = sql_query($sql);
+                for ($i = 0; $row = sql_fetch_array($result); $i++) {
+                    $tmp_write_table = $g5['write_prefix'] . $row['bo_table'];
 
-                        if ($row['wr_id'] == $row['wr_parent']) {
-                            // 원글
-                            $comment = "";
-                            $comment_link = "";
-                            $row2 = sql_fetch(" SELECT * from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
+                    if ($row['wr_id'] == $row['wr_parent']) {
+                        // 원글
+                        $comment = "";
+                        $comment_link = "";
+                        $row2 = sql_fetch(" SELECT * from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
 
+                        if ($row2) {
                             $name = get_sideview($row2['mb_id'], get_text(cut_str($row2['wr_name'], $config['cf_cut_name'])), $row2['wr_email'], $row2['wr_homepage']);
                             // 당일인 경우 시간으로 표시함
                             $datetime = substr($row2['wr_datetime'], 0, 10);
@@ -200,12 +201,17 @@ if (!auth_check_menu($auth, '300100', 'r', true)) {
                                 $datetime2 = substr($datetime2, 5, 5);
                             }
                         } else {
-                            // 코멘트
-                            $comment = '댓글. ';
-                            $comment_link = '#c_' . $row['wr_id'];
-                            $row2 = sql_fetch(" SELECT * from {$tmp_write_table} where wr_id = '{$row['wr_parent']}' ");
-                            $row3 = sql_fetch(" SELECT mb_id, wr_name, wr_email, wr_homepage, wr_datetime from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
+                            // 원글이 존재하지 않을 경우 처리
+                            continue; // 다음 반복으로 넘어감
+                        }
+                    } else {
+                        // 코멘트
+                        $comment = '댓글. ';
+                        $comment_link = '#c_' . $row['wr_id'];
+                        $row2 = sql_fetch(" SELECT * from {$tmp_write_table} where wr_id = '{$row['wr_parent']}' ");
+                        $row3 = sql_fetch(" SELECT mb_id, wr_name, wr_email, wr_homepage, wr_datetime from {$tmp_write_table} where wr_id = '{$row['wr_id']}' ");
 
+                        if ($row2 && $row3) {
                             $name = get_sideview($row3['mb_id'], get_text(cut_str($row3['wr_name'], $config['cf_cut_name'])), $row3['wr_email'], $row3['wr_homepage']);
                             // 당일인 경우 시간으로 표시함
                             $datetime = substr($row3['wr_datetime'], 0, 10);
@@ -215,33 +221,47 @@ if (!auth_check_menu($auth, '300100', 'r', true)) {
                             } else {
                                 $datetime2 = substr($datetime2, 5, 5);
                             }
+                        } else {
+                            // 코멘트가 존재하지 않을 경우 처리
+                            continue; // 다음 반복으로 넘어감
                         }
-                        ?>
-
-                        <tr>
-                            <td class="td_category"><a href="<?php echo G5_BBS_URL ?>/new.php?gr_id=<?php echo $row['gr_id'] ?>"><?php echo cut_str($row['gr_subject'], 10) ?></a></td>
-                            <td class="td_category"><a href="<?php echo get_pretty_url($row['bo_table']) ?>"><?php echo cut_str($row['bo_subject'], 20) ?></a></td>
-                            <td><a href="<?php echo get_pretty_url($row['bo_table'], $row2['wr_id']); ?><?php echo $comment_link ?>"><?php echo $comment ?><?php echo conv_subject($row2['wr_subject'], 100) ?></a></td>
-                            <td class="td_mbname">
-                                <div><?php echo $name ?></div>
-                            </td>
-                            <td class="td_datetime"><?php echo $datetime ?></td>
-                        </tr>
-
-                        <?php
-                    }
-                    if ($i == 0) {
-                        echo '<tr><td colspan="' . $colspan . '" class="empty_table">자료가 없습니다.</td></tr>';
                     }
                     ?>
-                </tbody>
-            </table>
-        </div>
 
-        <div class="btn_list03 btn_list">
-            <a href="<?php echo G5_BBS_URL ?>/new.php">최근게시물 더보기</a>
-        </div>
-    </section>
+                    <tr>
+                        <td class="td_category"><a href="<?php echo G5_BBS_URL ?>/new.php?gr_id=<?php echo $row['gr_id'] ?>"><?php echo cut_str($row['gr_subject'], 10) ?></a></td>
+                        <td class="td_category"><a href="<?php echo get_pretty_url($row['bo_table']) ?>"><?php echo cut_str($row['bo_subject'], 20) ?></a></td>
+                        <td>
+                            <?php
+                            if ($row2['wr_subject']) {
+                                // 원글 제목이 존재할 경우 출력
+                                echo '<a href="' . get_pretty_url($row['bo_table'], $row2['wr_id']) . $comment_link . '">' . $comment . conv_subject($row2['wr_subject'], 100) . '</a>';
+                            } else {
+                                // 원글 제목이 없을 경우 다른 처리 (예: "제목없음" 출력)
+                                echo '제목없음';
+                            }
+                            ?>
+                        </td>
+                        <td class="td_mbname">
+                            <div><?php echo $name ?></div>
+                        </td>
+                        <td class="td_datetime"><?php echo $datetime ?></td>
+                    </tr>
+
+                <?php
+                }
+                if ($i == 0) {
+                    echo '<tr><td colspan="' . $colspan . '" class="empty_table">자료가 없습니다.</td></tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="btn_list03 btn_list">
+        <a href="<?php echo G5_BBS_URL ?>/new.php">최근게시물 더보기</a>
+    </div>
+</section>
 
     <?php
 } //endif 최근게시물
