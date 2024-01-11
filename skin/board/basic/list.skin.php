@@ -116,30 +116,33 @@ add_stylesheet('<link rel="stylesheet" href="'.$board_skin_url.'/style.css">', 0
         </tr>
         </thead>
         <tbody>
-        <?php
-        
-        // $totalPosts = count($list);
-        // for ($i = $totalPosts - 1; $i >= 0; $i--) {
-        for ($i=0; $i<count($list); $i++) {
-               
+    <?php
+    $start_num = ($page - 1) * $board['bo_page_rows'] + 1; // 시작 번호 설정
+    $current_num = $start_num; // 현재 번호 초기화
 
-        	if ($i%2==0) $lt_class = "even";
-        	else $lt_class = "";
-            // delete한 시간 값이 들어있는 wr_2가 존재할 때 화면에 보이지 않게 처리
-            if(!empty($list[$i]['wr_2'])) continue;
-		?>
-        
-        <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?> <?php echo $lt_class ?>">
-            <?php if ($is_checkbox) { ?>
-            <td class="td_chk chk_box">
-				<input type="checkbox" name="chk_wr_id[]" value="<?php echo $list[$i]['wr_id'] ?>" id="chk_wr_id_<?php echo $i ?>" class="selec_chk">
-            	<label for="chk_wr_id_<?php echo $i ?>">
-            		<span></span>
-            		<b class="sound_only"><?php echo $list[$i]['subject'] ?></b>
-            	</label>
-            </td>
-            <?php } ?>
-            <td class="td_num2"><?php echo $i+1 ?>
+    for ($i = 0; $i < count($list); $i++) {
+        if ($i % 2 == 0) $lt_class = "even";
+        else $lt_class = "";
+        if (!empty($list[$i]['wr_2'])) continue;
+
+        // 삭제된 게시물인 경우 현재 번호를 증가시키지 않음
+        if (!empty($list[$i]['wr_2'])) {
+            $current_num--;
+            continue;
+        }
+       
+    ?>
+    <tr class="<?php if ($list[$i]['is_notice']) echo "bo_notice"; ?> <?php echo $lt_class ?>">
+        <?php if ($is_checkbox) { ?>
+        <td class="td_chk chk_box">
+            <input type="checkbox" name="chk_wr_id[]" value="<?php echo $list[$i]['wr_id'] ?>" id="chk_wr_id_<?php echo $i ?>" class="selec_chk">
+            <label for="chk_wr_id_<?php echo $i ?>">
+                <span></span>
+                <b class="sound_only"><?php echo $list[$i]['subject'] ?></b>
+            </label>
+        </td>
+        <?php } ?>
+        <td class="td_num2"><?php echo $current_num++ ?></td>
             </td>
 
             <td class="td_subject" style="padding-left:<?php echo $list[$i]['reply'] ? (strlen($list[$i]['wr_reply'])*10) : '0'; ?>px">

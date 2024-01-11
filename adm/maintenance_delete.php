@@ -7,9 +7,9 @@ auth_check_menu($auth, $sub_menu, 'r');
 // 체크된 자료 삭제
 if (isset($_POST['chk']) && is_array($_POST['chk'])) {
     for ($i = 0; $i < count($_POST['chk']); $i++) {
-        $pp_id = (int) $_POST['chk'][$i];
+        $wr_id = (int) $_POST['chk'][$i];
 
-        sql_query(" delete from {$g5['popular_table']} where pp_id = '$pp_id' ", true);
+        sql_query("DELETE FROM rainwrite_qa WHERE wr_id = '$wr_id' ");
     }
 }
 

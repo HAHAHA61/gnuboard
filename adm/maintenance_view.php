@@ -3,6 +3,8 @@
 $sub_menu = "700100";
 require_once './_common.php';
 include_once(G5_LIB_PATH.'/thumbnail.lib.php');
+include_once(G5_LIB_PATH.'/mailer.lib.php');
+include_once(G5_PHPMAILER_PATH.'/PHPMailerAutoload.php');
 auth_check_menu($auth, $sub_menu, 'r');
 
 
@@ -39,8 +41,34 @@ $view = get_view($row, $board, $board_skin_path);
 
 $comment_action_url = "http://raineye.com/adm/maintenance_view.php?wr_id=".$wr_id;
 
-// 댓글 수정 폼이 제출되었을 때의 처리
+function sendEmailToOriginalPostAuthor($recipient, $subject, $message) {
+    global $config; // $config가 코드의 다른 위치에서 정의되어 있다고 가정합니다.
 
+    // 메일러 매개변수 생성
+    $fname = "최고관리자";
+    $fmail = "iissdn55@gmail.com";
+    $to = $recipient;
+    $content = $message;
+    $type = 1; // HTML 이메일로 가정합니다.
+    $file = ""; // 필요시 파일을 첨부할 수 있습니다.
+    $cc = "";
+    $bcc = "";
+
+    // 메일러 함수를 사용하여 이메일 보내기
+    $mail_send_result = mailer($fname, $fmail, $to, $subject, $content, $type, $file, $cc, $bcc);
+
+    if (!$mail_send_result) {
+        echo "메일 전송에 실패했습니다.";
+    } else {
+        echo "메일이 성공적으로 전송되었습니다.";
+    }
+}
+
+
+
+
+
+// 댓글 수정 폼이 제출되었을 때의 처리
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['w']) && $_POST['w'] == 'cu'){
@@ -78,6 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // 댓글 수정 후 다시 읽기 페이지로 리다이렉션 (선택)
         $redirect_url = "http://raineye.com/adm/maintenance_view.php?wr_id=".$wr_id;
+
+        sendEmailToOriginalPostAuthor($row['wr_email'], "[레인아이]내 글에 달린 댓글이 수정되었습니다.", " 댓글이 수정되었습니다. 확인해주세요.");
+
+
         goto_url($redirect_url);
         exit;
     }
@@ -115,6 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // 댓글 등록 후 다시 읽기 페이지로 리다이렉션 (선택)
         $redirect_url = "http://raineye.com/adm/maintenance_view.php?wr_id=".$wr_id;
 
+        // 원본 게시물 작성자에게 이메일 보내기
+        sendEmailToOriginalPostAuthor($row['wr_email'], "[레인아이]내 글에 새로운 댓글이 등록되었습니다.", "새로운 댓글이 등록되었습니다. 확인해주세요.");
+        
         goto_url($redirect_url);
 
         exit;
@@ -318,6 +353,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     var save_before = '';
     var save_html = document.getElementById('bo_vc_w').innerHTML;
 
+   
     function fviewcomment_submit(f)
     {
         var pattern = /(^\s*)|(\s*$)/g; // \s 공백 문자

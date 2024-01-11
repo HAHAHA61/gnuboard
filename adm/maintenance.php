@@ -7,9 +7,9 @@ auth_check_menu($auth, $sub_menu, 'r');
 // 체크된 자료 삭제
 if (isset($_POST['chk']) && is_array($_POST['chk'])) {
     for ($i = 0; $i < count($_POST['chk']); $i++) {
-        $pp_id = (int) $_POST['chk'][$i];
+        $wr_id = (int) $_POST['chk'][$i];
 
-        sql_query(" delete from {$g5['popular_table']} where pp_id = '$pp_id' ", true);
+        sql_query("DELETE FROM rainwrite_qa WHERE wr_id = '$wr_id' ");
     }
 }
 
@@ -33,10 +33,12 @@ $sql_order = " ORDER BY wr_comment = 0 DESC, wr_datetime ASC";
 
 $sql = "SELECT COUNT(*) AS cnt
         FROM rainwrite_qa
-        WHERE wr_is_comment <> 1 
+        {$sql_search}
+        AND wr_is_comment <> 1 
         AND wr_2 LIKE ''";
 $delete = sql_fetch($sql);
 $total_count = $delete['cnt'];
+
 
 $rows = $config['cf_page_rows'];
 $total_page  = ceil($total_count / $rows);  // 전체 페이지 계산
@@ -59,7 +61,8 @@ if($stx){
     WHERE wr_is_comment <> 1
     ORDER BY wr_comment = 0 DESC, 
              CASE WHEN wr_comment = 0 THEN wr_datetime END ASC,
-             CASE WHEN wr_comment > 0 THEN wr_datetime END DESC";
+             CASE WHEN wr_comment > 0 THEN wr_datetime END DESC
+             LIMIT {$from_record}, {$rows}";
 
 
 $result = sql_query($sql);
@@ -123,7 +126,8 @@ $colspan = 4;
                 </tr>
                 <tbody>
                 <?php
-                while ($delete = sql_fetch_array($result)) {
+                $i = 0;
+                while($delete = sql_fetch_array($result)) {
                     
                     if (!$delete['wr_2'] and $delete['wr_is_comment']!=1) {
                         $word = get_text($delete['wr_subject']);
@@ -155,6 +159,7 @@ $colspan = 4;
                            
                         </tr>
                 <?php
+                    $i++;
                     }
                 }
 
